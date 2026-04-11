@@ -8,5 +8,5 @@ public class RegisterUserRequest {
     private String email;
     private String username;
     private String password;
-    private Role role = Role.USER; // defaults to USER if not provided in request body
+    private Role role = Role.USER;
 }
