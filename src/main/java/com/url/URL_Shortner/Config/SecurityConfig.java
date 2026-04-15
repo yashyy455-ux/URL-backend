@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/authenticate").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers("/{shortUrl}").permitAll()
+                        .requestMatchers("/sse/connect").permitAll()
                         .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()

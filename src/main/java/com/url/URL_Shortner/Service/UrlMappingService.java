@@ -5,6 +5,7 @@ import com.url.URL_Shortner.DTO.UrlMappingDTO;
 import com.url.URL_Shortner.Entity.ClickEvent;
 import com.url.URL_Shortner.Entity.UrlMapping;
 import com.url.URL_Shortner.Entity.Users;
+import com.url.URL_Shortner.Event.UrlClickEvent;
 import com.url.URL_Shortner.Repository.ClickEventRepository;
 import com.url.URL_Shortner.Repository.UrlMappingRepository;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.context.ApplicationEventPublisher;
 
 @Slf4j
 @Service
@@ -27,6 +29,7 @@ public class UrlMappingService {
 
     private final UrlMappingRepository urlMappingRepository;
     private final ClickEventRepository clickEventRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public UrlMappingDTO createShortUrl(String originalUrl, Users user) {
         String shortUrl = generateShortUrl();
@@ -49,12 +52,17 @@ public class UrlMappingService {
         }
         urlMapping.setClickCount(urlMapping.getClickCount() + 1);
         urlMappingRepository.save(urlMapping);
-
         ClickEvent clickEvent = new ClickEvent();
         clickEvent.setClickDate(LocalDateTime.now());
         clickEvent.setUrlMapping(urlMapping);
         clickEventRepository.save(clickEvent);
-
+        eventPublisher.publishEvent(
+                new UrlClickEvent(
+                        urlMapping.getUser().getId(),
+                        urlMapping.getShortUrl(),
+                        urlMapping.getClickCount()
+                )
+        );
         return urlMapping;
     }
 
