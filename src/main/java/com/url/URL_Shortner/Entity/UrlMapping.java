@@ -3,13 +3,14 @@ package com.url.URL_Shortner.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 @Table(name ="url_mapping")
-public class UrlMapping {
+public class UrlMapping implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

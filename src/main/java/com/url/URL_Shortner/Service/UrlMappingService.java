@@ -10,6 +10,8 @@ import com.url.URL_Shortner.Repository.ClickEventRepository;
 import com.url.URL_Shortner.Repository.UrlMappingRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,8 @@ public class UrlMappingService {
     private final ClickEventRepository clickEventRepository;
     private final ApplicationEventPublisher eventPublisher;
 
+
+    @CacheEvict(value = "urls", allEntries = true)
     public UrlMappingDTO createShortUrl(String originalUrl, Users user) {
         String shortUrl = generateShortUrl();
         UrlMapping urlMapping = new UrlMapping();
@@ -43,6 +47,7 @@ public class UrlMappingService {
         return convertToDto(savedUrlMapping);
     }
 
+    @Cacheable(value = "urls", key = "#shortUrl")
     @Transactional
     public UrlMapping getOriginalUrl(String shortUrl) {
         UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);

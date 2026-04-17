@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "users")
-public class Users implements UserDetails {
+public class Users implements Serializable,UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
