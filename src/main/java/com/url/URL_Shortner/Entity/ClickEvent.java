@@ -1,5 +1,6 @@
 package com.url.URL_Shortner.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,5 +18,6 @@ public class ClickEvent implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "url_mapping_id")
+    @JsonIgnore
     private UrlMapping urlMapping;
 }

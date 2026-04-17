@@ -1,5 +1,6 @@
 package com.url.URL_Shortner.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,5 +30,6 @@ public class UrlMapping implements Serializable {
     private Users user;
 
     @OneToMany(mappedBy = "urlMapping", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ClickEvent> clickEvents;
 }
