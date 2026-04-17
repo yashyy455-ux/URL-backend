@@ -48,6 +48,14 @@ public class UrlMappingService {
     }
 
     @Cacheable(value = "urls", key = "#shortUrl")
+    public String getCachedOriginalUrl(String shortUrl) {
+        log.info("Cache MISS — hitting database for: {}", shortUrl);
+        UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
+        if (urlMapping == null) return null;
+        return urlMapping.getOriginalUrl();
+    }
+
+
     @Transactional
     public UrlMapping getOriginalUrl(String shortUrl) {
         UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);

@@ -17,14 +17,15 @@ public class RedirectController {
     private UrlMappingService urlMappingService;
 
     @GetMapping("/{shortUrl}")
-    public ResponseEntity<Void> redirect(@PathVariable String shortUrl){
-        UrlMapping urlMapping = urlMappingService.getOriginalUrl(shortUrl);
-        if (urlMapping != null) {
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add("Location", urlMapping.getOriginalUrl());
-            return ResponseEntity.status(302).headers(httpHeaders).build();
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> redirect(@PathVariable String shortUrl) {
+        // Check cache first
+        String originalUrl = urlMappingService.getCachedOriginalUrl(shortUrl);
+        if (originalUrl != null) {
+            // Still record the click
+            urlMappingService.getOriginalUrl(shortUrl);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Location", originalUrl);
+            return ResponseEntity.status(302).headers(headers).build();
         }
+        return ResponseEntity.notFound().build();
     }
-}
